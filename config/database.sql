@@ -1,1 +1,33 @@
 CREATE DATABASE DarDark;
+use DarDark;
+show DATABASES;
+show TABLEs;
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+
+    role ENUM('TRAVELER', 'HOST', 'ADMIN') NOT NULL DEFAULT 'TRAVELER',
+    status ENUM('ACTIVE', 'BANNED') NOT NULL DEFAULT 'ACTIVE',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE rentals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    host_id INT NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    price_per_night DECIMAL(10,2) NOT NULL,
+    max_guests INT NOT NULL,
+    description TEXT,
+    status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_rentals_host
+        FOREIGN KEY (host_id) REFERENCES users(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
