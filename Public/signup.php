@@ -203,6 +203,7 @@ Session::remove("succes");
                             <option value="" disabled selected>Select your role</option>
                             <option value="TRAVELER">Traveler</option>
                             <option value="HOST">Host</option>
+                            <option value="ADMIN">Admin</option>
                         </select>
                     </div>
 
