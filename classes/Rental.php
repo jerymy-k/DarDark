@@ -97,15 +97,68 @@ class Rental
         $stmt->execute([$hostId]);
         return $stmt->fetchAll();
     }
-    public static function getAll(): array
+    public static function getById(int $rentalId): ?array
     {
         $conn = Database::getInstance()->getConnection();
 
-        $sql = "SELECT * FROM rentals WHERE status = 'ACTIVE' ORDER BY created_at DESC";
+        $sql = "SELECT rentals.*, users.name 
+            FROM rentals
+            INNER JOIN users ON rentals.host_id = users.id
+            WHERE rentals.id = ?";
+
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$rentalId]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ?: null;  // ila mal9ach => null
+    }
+
+    public static function search(array $criteria, int $page = 1): array
+    {
+        $pdo = Database::getInstance()->getConnection();
+
+        $limit = 9;
+        $offset = ($page - 1) * $limit;
+
+        $sql = "SELECT * FROM rentals WHERE status = 'ACTIVE' AND is_active = 1";
+        $params = [];
+
+        if (!empty($criteria['city'])) {
+            $sql .= " AND city LIKE ?";
+            $params[] = '%' . $criteria['city'] . '%';
+        }
+
+        if (!empty($criteria['min_price'])) {
+            $sql .= " AND price_per_night >= ?";
+            $params[] = $criteria['min_price'];
+        }
+
+        if (!empty($criteria['max_price'])) {
+            $sql .= " AND price_per_night <= ?";
+            $params[] = $criteria['max_price'];
+        }
+
+        if (!empty($criteria['guests'])) {
+            $sql .= " AND max_guests >= ?";
+            $params[] = $criteria['guests'];
+        }
+
+        $sql .= " ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    public static function getAll(): array
+    {
+        $pdo = Database::getInstance()->getConnection();
+        $sql = "SELECT * FROM rentals
+            WHERE status = 'ACTIVE' AND is_active = 1
+            ORDER BY created_at DESC";
+        return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

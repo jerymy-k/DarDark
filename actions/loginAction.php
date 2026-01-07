@@ -34,4 +34,10 @@ if (!$isLogedIn) {
         header('Location: /airbnb-php-oop/Public/host/dashboard.php');
         exit();
     }
+    
+    if ($role === 'ADMIN') {
+        header('Location: /airbnb-php-oop/Public/admin/dashboard.php');
+        exit();
+    }
+    
 }

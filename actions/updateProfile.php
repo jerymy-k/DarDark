@@ -18,7 +18,7 @@ $user;
 if ($role === 'HOST') {
     $redirectPath = '/airbnb-php-oop/Public/host/host-profile.php';
 } else if ($role === 'TRAVELER') {
-    $redirectPath = '/airbnb-php-oop/Public/travaler/travaler-profile.php';
+    $redirectPath = '/airbnb-php-oop/Public/traveler/traveler-profile.php';
 } else if ($role === 'ADMIN') {
     $redirectPath = '/airbnb-php-oop/Public/admin/admin-profile.php';
 }

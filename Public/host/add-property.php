@@ -59,7 +59,8 @@ Session::remove("succes");
     <div class="relative min-h-screen w-full">
         <div class="flex min-h-screen w-full">
 
-            <aside class="hidden md:flex w-80 flex-col border-r border-white/10 bg-white/[0.03] backdrop-blur">
+            <aside
+                class="hidden md:flex w-80 flex-col border-r border-white/10 bg-white/[0.03] backdrop-blur sticky top-0 h-screen">
                 <div class="flex items-center gap-3 px-6 py-5 border-b border-white/10">
                     <div class="h-10 w-10">
                         <img src="/airbnb-php-oop/Public/img/DarDarkLogo.png" alt="DarDark"
@@ -73,12 +74,12 @@ Session::remove("succes");
 
                 <nav class="flex-1 px-4 py-5 space-y-2">
                     <a href="/airbnb-php-oop/Public/host/dashboard.php"
-                        class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold border border-white/10 bg-black/20 hover:bg-white/5 transition">
-                        <span>Dashboard</span><span class="text-xs text-white/40">Home</span>
-                    </a>
-
-                    <a href="/airbnb-php-oop/Public/host/add-property.php"
-                        class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                    class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold border border-white/10 bg-black/20 hover:bg-white/5 transition">
+                    <span>Dashboard</span><span class="text-xs text-white/40">Home</span>
+                </a>
+                
+                <a href="/airbnb-php-oop/Public/host/add-property.php"
+                class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold bg-white/5 border border-white/10 hover:bg-white/10 transition">
                         <span>Add Property</span><span class="text-xs text-white/40">Create</span>
                     </a>
 
@@ -87,10 +88,7 @@ Session::remove("succes");
                         <span>My Properties</span><span class="text-xs text-white/40">Manage</span>
                     </a>
 
-                    <a href="/airbnb-php-oop/Public/host/notifications.php"
-                        class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold border border-white/10 bg-black/20 hover:bg-white/5 transition">
-                        <span>Booking Notifications</span><span class="text-xs text-white/40">New</span>
-                    </a>
+
 
                     <a href="/airbnb-php-oop/Public/host/host-profile.php"
                         class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold border border-white/10 bg-black/20 hover:bg-white/5 transition">

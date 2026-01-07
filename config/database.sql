@@ -98,3 +98,12 @@ CREATE TABLE reviews (
         FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE
 );
+
+
+SELECT * FROM rentals WHERE status = 'ACTIVE' and id = 6 ;
+
+SELECT * from rentals INNER JOIN users on rentals.host_id = users.id WHERE rentals.id = 5;
+ALTER TABLE users
+ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1;
+ALTER TABLE rentals
+ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1;
