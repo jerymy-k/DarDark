@@ -3,33 +3,33 @@ require_once __DIR__ . '/../core/Database.php';
 
 class Statistics
 {
-    public static function getTotalUsers(): int
+    public static function stats(): array
     {
         $pdo = Database::getInstance()->getConnection();
-        return (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-    }
 
-    public static function getTotalRentals(): int
-    {
-        $pdo = Database::getInstance()->getConnection();
-        return (int)$pdo->query("SELECT COUNT(*) FROM rentals")->fetchColumn();
-    }
+        $users = (int) $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        $activeUsers = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE is_active = 1")->fetchColumn();
 
-    public static function getTotalBookings(): int
-    {
-        $pdo = Database::getInstance()->getConnection();
-        return (int)$pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
-    }
+        $rentals = (int) $pdo->query("SELECT COUNT(*) FROM rentals")->fetchColumn();
+        $activeRentals = (int) $pdo->query("SELECT COUNT(*) FROM rentals WHERE is_active = 1")->fetchColumn();
 
-    public static function getTotalRevenue(): float
-    {
-        $pdo = Database::getInstance()->getConnection();
-        $sql = "SELECT COALESCE(SUM(total_price),0)
-                FROM bookings
-                WHERE status = 'CONFIRMED'";
-        return (float)$pdo->query($sql)->fetchColumn();
-    }
+        $bookings = (int) $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
 
+        $revenue = (float) $pdo->query("
+            SELECT COALESCE(SUM(total_price),0)
+            FROM bookings
+            WHERE status='CONFIRMED'
+        ")->fetchColumn();
+
+        return [
+            'users' => $users,
+            'activeUsers' => $activeUsers,
+            'rentals' => $rentals,
+            'activeRentals' => $activeRentals,
+            'bookings' => $bookings,
+            'revenue' => $revenue,
+        ];
+    }
     public static function getTopRentals(int $limit = 10): array
     {
         $pdo = Database::getInstance()->getConnection();

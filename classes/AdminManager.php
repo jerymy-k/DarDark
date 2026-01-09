@@ -17,17 +17,6 @@ class AdminManager
         return $stmt->execute([$isActive, $userId]);
     }
 
-    public static function changeUserRole(int $userId, string $role): bool
-    {
-        $allowed = ['ADMIN', 'HOST', 'TRAVELER'];
-        if (!in_array($role, $allowed, true))
-            return false;
-
-        $pdo = Database::getInstance()->getConnection();
-        $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE id = ?");
-        return $stmt->execute([$role, $userId]);
-    }
-
     public static function allRentals(): array
     {
         $pdo = Database::getInstance()->getConnection();
@@ -48,31 +37,5 @@ class AdminManager
     }
 
    
-    public static function stats(): array
-    {
-        $pdo = Database::getInstance()->getConnection();
-
-        $users = (int) $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-        $activeUsers = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE is_active = 1")->fetchColumn();
-
-        $rentals = (int) $pdo->query("SELECT COUNT(*) FROM rentals")->fetchColumn();
-        $activeRentals = (int) $pdo->query("SELECT COUNT(*) FROM rentals WHERE is_active = 1")->fetchColumn();
-
-        $bookings = (int) $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
-
-        $revenue = (float) $pdo->query("
-            SELECT COALESCE(SUM(total_price),0)
-            FROM bookings
-            WHERE status='CONFIRMED'
-        ")->fetchColumn();
-
-        return [
-            'users' => $users,
-            'activeUsers' => $activeUsers,
-            'rentals' => $rentals,
-            'activeRentals' => $activeRentals,
-            'bookings' => $bookings,
-            'revenue' => $revenue,
-        ];
-    }
+    
 }

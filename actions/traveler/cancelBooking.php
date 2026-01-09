@@ -3,11 +3,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . "/../../core/Session.php";
-require_once __DIR__ . "/../../classes/Booking.php";
-require_once __DIR__ . "/../../classes/Mailer.php";
-require_once __DIR__ . "/../../classes/User.php";
-require_once __DIR__ . "/../../classes/Rental.php";
+require_once __DIR__ . "/../core/Session.php";
+require_once __DIR__ . "/../classes/Booking.php";
+require_once __DIR__ . "/../classes/Mailer.php";
+require_once __DIR__ . "/../classes/User.php";
+require_once __DIR__ . "/../classes/Rental.php";
 Session::start();
 
 if (!Session::get('id')) {
@@ -25,16 +25,14 @@ $actorId = (int) Session::get('id');
 $role = (string) Session::get('role');
 
 try {
-    $policy = ($role === 'ADMIN') ? new AdminCancelPolicy() : new UserCancelPolicy();
 
-    Booking::cancel($bookingId, $policy, $actorId);
+    Booking::cancel($bookingId);
     $booking = Booking::getById($bookingId);
     $rental = Rental::getById((int) $booking['rental_id']);
 
     $traveler = User::getUserById((int) $booking['user_id']);
     $host = User::getUserById((int) $rental['host_id']);
 
-    // ... دير cancel ف DB
 
     $mailer = new Mailer();
     $mailer->sendBookingCancellation($booking, $traveler, $host, $rental);

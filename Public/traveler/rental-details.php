@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . "/../../core/Session.php";
 require_once __DIR__ . "/../../classes/Rental.php";
+require_once __DIR__ . "/../../classes/Review.php";
 
 Session::start();
 
@@ -15,10 +16,18 @@ if (!Session::get('id')) {
 $id = (int) $_GET['id'];
 $rental = Rental::getById($id);
 
-if (!$rental) {
-    echo "Rental not found";
-    exit();
-}
+$userId = (int) Session::get('id');
+
+$avgRating = Review::getAverageRating((int) $id);
+$reviews = Review::findByRental((int) $id);
+
+$canReview = Review::canReview($userId, (int) $id) && !Review::alreadyReviewed($userId, (int) $id);
+
+$err = Session::get('errer');
+$ok = Session::get('succes');
+Session::remove('errer');
+Session::remove('succes');
+
 
 function h($v)
 {
@@ -47,6 +56,38 @@ function h($v)
         }
     </style>
 </head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    (async function () {
+        const rentalId = <?= (int) $rental['id'] ?>;
+
+        const res = await fetch(`/airbnb-php-oop/Public/api/booked_dates.php?rental_id=${rentalId}`);
+        const bookedRanges = await res.json();
+        const startInput = document.getElementById("start_date");
+        const endInput = document.getElementById("end_date");
+
+        const commonOptions = {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disable: bookedRanges,
+        };
+
+        const startPicker = flatpickr(startInput, {
+            ...commonOptions,
+            onChange: function (selectedDates, dateStr) {
+                
+                endPicker.set("minDate", dateStr);
+            }
+        });
+
+        const endPicker = flatpickr(endInput, {
+            ...commonOptions,
+        });
+
+    })();
+</script>
 
 <body class="min-h-screen bg-zinc-950 text-zinc-100">
     <div class="pointer-events-none fixed inset-0">
@@ -142,13 +183,10 @@ function h($v)
                             Back to list
                         </a>
 
-                        <button type="button"
-                            class="rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 px-5 py-3 text-sm font-bold shadow-lg shadow-rose-500/20 hover:brightness-110 transition">
-                            Reserve (later)
-                        </button>
                     </div>
                 </div>
             </div>
+
         </section>
 
         <div class="mt-6 text-center text-xs text-white/40">
@@ -170,15 +208,16 @@ function h($v)
 
             <div>
                 <label class="text-sm font-semibold">Start date</label>
-                <input required type="date" name="start_date"
+                <input id="start_date" required name="start_date"
                     class="w-full mt-1 rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none">
             </div>
 
             <div>
                 <label class="text-sm font-semibold">End date</label>
-                <input required type="date" name="end_date"
+                <input id="end_date" required name="end_date"
                     class="w-full mt-1 rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none">
             </div>
+
 
             <div class="flex items-end">
                 <button type="submit"
@@ -187,6 +226,96 @@ function h($v)
                 </button>
             </div>
         </form>
+    </div>
+    <?php if ($err): ?>
+        <div class="mt-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            <?= h($err) ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($ok): ?>
+        <div class="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+            <?= h($ok) ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="mt-8 rounded-3xl border border-white/10 bg-black/20 p-6">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+            <h2 class="text-lg font-bold">Reviews</h2>
+            <div class="text-sm text-white/70">
+                Average:
+                <span class="font-bold text-white">
+                    <?= number_format($avgRating, 1) ?>/5
+                </span>
+                <span class="text-white/40">(
+                    <?= count($reviews) ?>)
+                </span>
+            </div>
+        </div>
+
+        <?php if ($canReview): ?>
+            <form method="POST" action="/airbnb-php-oop/actions/traveler/createReview.php"
+                class="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-4">
+
+                <input type="hidden" name="rental_id" value="<?= (int) $id ?>">
+
+                <div>
+                    <label class="block text-sm font-semibold text-white/90 mb-2">Rating (1-5)</label>
+                    <select name="rating" required
+                        class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none">
+                        <option value="5">★★★★★ (5)</option>
+                        <option value="4">★★★★☆ (4)</option>
+                        <option value="3">★★★☆☆ (3)</option>
+                        <option value="2">★★☆☆☆ (2)</option>
+                        <option value="1">★☆☆☆☆ (1)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-white/90 mb-2">Comment</label>
+                    <textarea name="comment" required rows="4"
+                        class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none"
+                        placeholder="Write your experience..."></textarea>
+                </div>
+
+                <div class="flex justify-end">
+                    <button class="rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 px-5 py-3 text-sm font-bold">
+                        Submit review
+                    </button>
+                </div>
+            </form>
+        <?php else: ?>c
+            <div class="mt-5 text-sm text-white/60">
+                You can leave a review only after completing a confirmed stay (and only once).
+            </div>
+        <?php endif; ?>
+
+        <div class="mt-6 space-y-3">
+            <?php if (empty($reviews)): ?>
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                    No reviews yet.
+                </div>
+            <?php else: ?>
+                <?php foreach ($reviews as $rv): ?>
+                    <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="font-semibold">
+                                <?= h($rv['user_name'] ?? 'User') ?>
+                            </div>
+                            <div class="text-sm text-white/70">
+                                <?= h($rv['rating']) ?>/5
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm text-white/70">
+                            <?= h($rv['comment']) ?>
+                        </div>
+                        <div class="mt-2 text-xs text-white/40">
+                            <?= h($rv['created_at']) ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
 
 </body>

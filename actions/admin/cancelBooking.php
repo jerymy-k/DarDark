@@ -11,13 +11,7 @@ if (!Session::get('id') || Session::get('role') !== 'ADMIN') {
 
 $bookingId = (int)($_POST['booking_id'] ?? 0);
 
-if ($bookingId <= 0) {
-    header("Location: /airbnb-php-oop/Public/admin/bookings.php");
-    exit();
-}
-
-// ADMIN → userId = null
-Booking::cancel($bookingId, null);
+Booking::cancel($bookingId);
 
 header("Location: /airbnb-php-oop/Public/admin/bookings.php");
 exit();

@@ -18,12 +18,6 @@ $userId = (int)Session::get('id');
 $bookingId = (int)($_GET['id'] ?? 0);
 
 $booking = Booking::getById($bookingId);
-if (!$booking) { die("Booking not found"); }
-
-// traveler يقدر يحمل غير ديالو (polymorphism simple)
-if ((int)$booking['user_id'] !== $userId && Session::get('role') !== 'ADMIN') {
-    die("Forbidden");
-}
 
 $rental = Rental::getById((int)$booking['rental_id']);
 $traveler = User::getUserById((int)$booking['user_id']);

@@ -106,6 +106,7 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         'F' => 
         array (
             'FontLib\\' => 8,
+            'Firebase\\JWT\\' => 13,
         ),
         'D' => 
         array (
@@ -133,6 +134,10 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-font-lib/src/FontLib',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Dompdf\\' => 
         array (

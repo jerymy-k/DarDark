@@ -17,7 +17,7 @@ $adminId = (int) Session::get('id');
 $adminInfo = User::getUserById($adminId);
 $adminName = $adminInfo['name'] ?? 'Admin';
 
-$bookings = Booking::findAll(); // admin method
+$bookings = Booking::findAll(); 
 
 $err = Session::get('errer');
 $ok  = Session::get('succes');
@@ -51,8 +51,7 @@ function h($v){ return htmlspecialchars((string)$v); }
   <div class="relative min-h-screen w-full">
     <div class="flex min-h-screen w-full">
 
-      <!-- SIDEBAR -->
-      <aside class="hidden md:flex w-80 flex-col border-r border-white/10 bg-white/[0.03] backdrop-blur sticky top-0 h-screen">
+       <aside class="hidden md:flex w-80 flex-col border-r border-white/10 bg-white/[0.03] backdrop-blur sticky top-0 h-screen">
         <div class="flex items-center gap-3 px-6 py-5 border-b border-white/10">
           <div class="h-10 w-10">
             <img src="/airbnb-php-oop/Public/img/DarDarkLogo.png" alt="DarDark" class="h-10 w-10 object-contain" />
@@ -98,8 +97,7 @@ function h($v){ return htmlspecialchars((string)$v); }
         </div>
       </aside>
 
-      <!-- MAIN -->
-      <main class="flex-1 min-h-screen w-full px-4 py-6 md:px-10 md:py-10 space-y-6">
+       <main class="flex-1 min-h-screen w-full px-4 py-6 md:px-10 md:py-10 space-y-6">
 
         <header class="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>

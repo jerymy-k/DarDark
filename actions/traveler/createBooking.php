@@ -34,11 +34,6 @@ $start = trim($_POST['start_date'] ?? '');
 $end = trim($_POST['end_date'] ?? '');
 
 $rental = Rental::getById($rentalId);
-if (!$rental) {
-    Session::set('errer', "Rental not found.");
-    header("Location: /airbnb-php-oop/Public/traveler/dashboard.php");
-    exit();
-}
 
 try {
     $bookingObj = new Booking();
@@ -51,20 +46,12 @@ try {
         'price_per_night' => (float) $rental['price_per_night'],
     ]);
 
-    // ✅ جيب booking من DB باستعمال ID الصحيح
     $booking = Booking::getById($newId);
-    if (!$booking) {
-        Session::set('errer', "Booking created but not found.");
-        header("Location: /airbnb-php-oop/Public/traveler/my-bookings.php");
-        exit();
-    }
 
-    // ✅ rental و users
     $rental = Rental::getById((int) $booking['rental_id']);
     $traveler = User::getUserById((int) $booking['user_id']);
     $host = User::getUserById((int) $rental['host_id']);
 
-    // ✅ send email
     $mailer = new Mailer();
     $mailer->sendBookingConfirmation($booking, $traveler, $host, $rental);
 

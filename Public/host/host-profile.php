@@ -159,23 +159,31 @@ Session::remove("succes");
                                     class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
                             </div>
 
-                            <div>
-                                <label class="mb-2 block text-sm font-semibold text-white/90">old password</label>
-                                <input type="password" name="old_password"
-                                    placeholder="Leave empty to keep current password"
-                                    class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
-                            </div><br>
-                            <div>
-                                <label class="mb-2 block text-sm font-semibold text-white/90">New password</label>
-                                <input type="password" name="new_password" placeholder="New password"
-                                    class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
-                            </div>
+                            <div class="md:col-span-2">
+                                <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+                                    <div class="text-sm font-semibold text-white/90">Password</div>
+                                    <div class="mt-1 text-xs text-white/50">Leave empty to keep current password.</div>
 
-                            <div>
-                                <label class="mb-2 block text-sm font-semibold text-white/90">Confirm new
-                                    password</label>
-                                <input type="password" name="confirm_new_password" placeholder="Confirm new password"
-                                    class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
+                                    <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                                        <div>
+                                            <label class="mb-2 block text-sm font-semibold text-white/90">Old</label>
+                                            <input type="password" name="old_password" placeholder="Old password"
+                                                   class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
+                                        </div>
+
+                                        <div>
+                                            <label class="mb-2 block text-sm font-semibold text-white/90">New</label>
+                                            <input type="password" name="new_password" placeholder="New password"
+                                                   class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
+                                        </div>
+
+                                        <div>
+                                            <label class="mb-2 block text-sm font-semibold text-white/90">Confirm</label>
+                                            <input type="password" name="confirm_new_password" placeholder="Confirm new"
+                                                   class="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-rose-500/40 focus:ring-4 focus:ring-rose-500/10" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="md:col-span-2 flex items-center justify-end gap-3 pt-2">

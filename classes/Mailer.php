@@ -9,7 +9,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class Mailer
 {
     private array $cfg;
-
     public function __construct()
     {
         $this->cfg = require __DIR__ . '/../config/mail.php';
@@ -37,11 +36,9 @@ class Mailer
     {
         $subject = "Booking confirmed — " . ($rental['title'] ?? 'Rental');
 
-        // Traveler email
         $travelerHtml = $this->renderTemplate('booking_confirm_traveler.php', compact('booking', 'traveler', 'host', 'rental'));
         $ok1 = $this->send($traveler['email'], $subject, $travelerHtml);
 
-        // Host email
         $hostSubject = "New booking received — " . ($rental['title'] ?? 'Rental');
         $hostHtml = $this->renderTemplate('booking_confirm_host.php', compact('booking', 'traveler', 'host', 'rental'));
         $ok2 = $this->send($host['email'], $hostSubject, $hostHtml);
@@ -83,7 +80,6 @@ class Mailer
             $mail->AltBody = strip_tags($html);
             return $mail->send();
         } catch (Exception $e) {
-            // تقدر تخزن error فـ logs
             return false;
         }
     }
