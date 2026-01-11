@@ -97,7 +97,7 @@ CREATE TABLE reviews (
     CONSTRAINT fk_review_user
         FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE
-);
+);  
 
 
 SELECT * FROM rentals WHERE status = 'ACTIVE' and id = 6 ;

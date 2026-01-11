@@ -6,10 +6,10 @@ class Database
 {
     private static ?Database $instance = null;
     private PDO $connection;
-    private string $host = 'localhost';
-    private string $dbName = 'DarDark';
-    private string $user = 'root';
-    private string $pass = 'kerymy';
+    private string $host = 'sql100.infinityfree.com';
+    private string $dbName = 'if0_40863795_XXX';
+    private string $user = 'if0_40863795';
+    private string $pass = 'kerymy200905';
     private string $charset = "utf8mb4";
     private function __construct()
     {
